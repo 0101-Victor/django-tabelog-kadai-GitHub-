@@ -20,9 +20,10 @@ from django.urls import path, include
 from members.models import Reservation, Favorite, PaymentMethod, Subscription
 from accounts.models import Profile
 from django.http import HttpResponse
+from django.shortcuts import render
 
 def top(request):
-    return HttpResponse("トップページです")
+    return render(request, "pages/index.html")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
