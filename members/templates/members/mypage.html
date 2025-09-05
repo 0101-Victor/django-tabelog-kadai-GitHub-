@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h2>マイページ</h2>
+<ul>
+  <li><a href="{% url 'profile_edit' %}">会員情報編集</a></li>
+  <li><a href="{% url 'reservation_list' %}">予約一覧</a></li>
+  <li><a href="{% url 'favorite_list' %}">お気に入り一覧</a></li>
+  <li><a href="{% url 'payment_edit' %}">お支払い方法</a></li>
+  <li><a href="{% url 'cancel_subscription' %}">有料プラン解約</a></li>
+  <li><a href="{% url 'logout' %}">ログアウト</a></li>
+</ul>
+{% endblock %}

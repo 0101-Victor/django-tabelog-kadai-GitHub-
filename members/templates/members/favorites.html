@@ -1,0 +1,5 @@
+# accounts/models/favorite.py
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    store = models.ForeignKey("base.Store", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
