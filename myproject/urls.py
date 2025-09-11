@@ -21,6 +21,8 @@ from members.models import Reservation, Favorite, PaymentMethod, Subscription
 from accounts.models import Profile
 from django.http import HttpResponse
 from django.shortcuts import render
+from pages import views
+from accounts import views as accounts_views
 
 def top(request):
     return render(request, "pages/index.html")
@@ -29,5 +31,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("members/", include("members.urls")),
-    path("", top, name="top"),
+    path("register/", accounts_views.register, name="register"),
+    path("", views.TopView.as_view(), name="top"),
 ]

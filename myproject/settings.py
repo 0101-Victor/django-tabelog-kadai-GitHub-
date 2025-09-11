@@ -130,6 +130,9 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = "mypage"  # ログイン後に飛ぶ先
 LOGOUT_REDIRECT_URL = "top"    # ログアウト後に飛ぶ先
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -152,3 +155,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# 開発用メール送信（コンソールに出力）
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@nagoyameshi.com"

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+{% load static %}
 
 <head>
   <meta charset="utf-8">
@@ -13,23 +14,28 @@
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Carter+One&display=swap" rel="stylesheet">
-
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- Scripts -->
-  <link rel="stylesheet" href="https://nagoyameshi-pattern-1.herokuapp.com/build/assets/app.2062f98f.css" />
-  <script type="module" src="https://nagoyameshi-pattern-1.herokuapp.com/build/assets/app.093f8e66.js"></script>
-  <link href="https://nagoyameshi-pattern-1.herokuapp.com/css/nagoyameshi.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="stylesheet" href="{% static 'css/nagoyameshi.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
 </head>
 
 <body>
   <header>
     {% block header %}
-    {% include 'snippets/header.html' %}
+      {% include 'snippets/header.html' %}
     {% endblock %}
   </header>
+
+  {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
 
   <main>
     {% block main %}
@@ -38,11 +44,12 @@
 
   <footer>
     {% block footer %}
-    {% include 'snippets/footer.html' %}
+      {% include 'snippets/footer.html' %}
     {% endblock %}
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-  <script src="https://nagoyameshi-pattern-1.herokuapp.com/js/carousel.js"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/carousel.js' %}"></script>
 </body>
 
 </html>
