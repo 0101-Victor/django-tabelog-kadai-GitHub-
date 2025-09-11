@@ -23,9 +23,13 @@ if ENV == "prod":
 else:
     dotenv_path = BASE_DIR / "secrets" / ".env.dev"
 
-print("Loading dotenv from:", dotenv_path)  # デバッグ出力
 load_dotenv(dotenv_path)
-print("DB_HOST after load:", os.environ.get("DB_HOST"))
+
+if ENV != "prod":  # 開発環境のときだけ出力
+    print("Loading dotenv from:", dotenv_path)
+    print("DB_HOST after load:", os.environ.get("DB_HOST"))
+    print("DB_NAME =", os.environ.get("DB_NAME"))
+    print("DB_USER =", os.environ.get("DB_USER"))
 
 # BASE_DIR/.env をロード
 #load_dotenv(BASE_DIR / ".env")
@@ -77,7 +81,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'template'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
