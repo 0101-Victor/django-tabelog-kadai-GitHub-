@@ -38,7 +38,6 @@ if ENV != "prod":  # 開発環境のときだけ出力
 print("DB_NAME =", os.environ.get("DB_NAME"))
 print("DB_USER =", os.environ.get("DB_USER"))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -135,7 +134,6 @@ LOGIN_REDIRECT_URL = "mypage"  # ログイン後に飛ぶ先
 LOGOUT_REDIRECT_URL = "top"    # ログアウト後に飛ぶ先
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
