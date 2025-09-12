@@ -18,10 +18,14 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = os.environ.get("DJANGO_ENV", "dev")
-if ENV == "prod":
-    dotenv_path = BASE_DIR / "secrets" / ".env.prod"
-else:
+
+if ENV == "dev":
+    # 開発環境だけ .env.dev をロード
     dotenv_path = BASE_DIR / "secrets" / ".env.dev"
+    print("Loading dotenv from:", dotenv_path)
+    load_dotenv(dotenv_path)
+
+print("Loading dotenv from:", dotenv_path)  # デバッグ出力
 
 load_dotenv(dotenv_path)
 
@@ -48,7 +52,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1")
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-
 
 # Application definition
 
