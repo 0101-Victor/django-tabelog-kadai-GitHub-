@@ -33,4 +33,6 @@ urlpatterns = [
     path("members/", include("members.urls")),
     path("register/", accounts_views.register, name="register"),
     path("", views.TopView.as_view(), name="top"),
+    path("company/", views.CompanyView.as_view(), name="company"),
+    path("terms/", views.TermsView.as_view(), name="terms"),
 ]
