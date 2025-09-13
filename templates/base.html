@@ -23,30 +23,34 @@
 </head>
 
 <body>
-  <header>
-    {% block header %}
-      {% include 'snippets/header.html' %}
-    {% endblock %}
-  </header>
+  <div id="app" class="wrapper">
 
-  {% if messages %}
-  <div class="container mt-3">
-    {% for message in messages %}
-      <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-  </div>
-  {% endif %}
+    <header>
+      {% block header %}
+        {% include 'snippets/header.html' %}
+      {% endblock %}
+    </header>
 
-  <main>
-    {% block main %}  
-    {% endblock %}
-  </main>
+    {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
-  <footer>
-    {% block footer %}
-      {% include 'snippets/footer.html' %}
-    {% endblock %}
-  </footer>
+    <main>
+      {% block main %}{% endblock %}
+    </main>
+
+    <footer>
+      {% block footer %}
+        {% include 'snippets/footer.html' %}
+      {% endblock %}
+    </footer>
+
+  </div> <!-- wrapperをここで閉じる -->
+
   <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
   <script src="{% static 'js/app.js' %}"></script>
   <script src="{% static 'js/carousel.js' %}"></script>
