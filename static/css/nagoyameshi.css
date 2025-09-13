@@ -141,11 +141,11 @@ a {
 }
 
 .star-rating:before {
-  content: "★★★★★";  /* グレーの星 */
+  content: "\2605\2605\2605\2605\2605";  /* グレーの星 */
 }
 
 .star-rating:after {
-  content: "★★★★★";  /* 黄色の星を重ねる */
+  content: "\2605\2605\2605\2605\2605";  /* 黄色の星 */
 }
 
 .star-rating:after {
