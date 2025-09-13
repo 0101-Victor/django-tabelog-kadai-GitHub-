@@ -140,18 +140,14 @@ a {
   color: #CCCCCC;
 }
 
-.star-rating:before {
-  content: "\f005\f005\f005\f005\f005"; /* Font Awesomeの星 */
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  color: #ccc;
-}
-
+.star-rating:before,
 .star-rating:after {
-  content: "\f005\f005\f005\f005\f005";
-  font-family: "Font Awesome 6 Free";
+  content: "\f005\f005\f005\f005\f005"; /* Font Awesomeの星 */
+  font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", sans-serif;
   font-weight: 900;
-  color: #F29F05;
+
+.star-rating:before {
+  color: #ccc;  /* 背景のグレー星 */
 }
 
 .star-rating:after {
@@ -161,7 +157,7 @@ a {
   left: 0;
   overflow: hidden;
   white-space: nowrap;
-  color: #F29F05;  
+  color: #F29F05;  /* 黄色い星 */
 }
 
 .star-rating[data-rate="5"]:after {
