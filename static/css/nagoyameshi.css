@@ -141,11 +141,17 @@ a {
 }
 
 .star-rating:before {
-  content: "\2605\2605\2605\2605\2605";  /* グレーの星 */
+  content: "\f005\f005\f005\f005\f005"; /* Font Awesomeの星 */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: #ccc;
 }
 
 .star-rating:after {
-  content: "\2605\2605\2605\2605\2605";  /* 黄色の星 */
+  content: "\f005\f005\f005\f005\f005";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: #F29F05;
 }
 
 .star-rating:after {
