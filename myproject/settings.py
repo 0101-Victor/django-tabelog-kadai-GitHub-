@@ -10,50 +10,36 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from pathlib import Path
 from dotenv import load_dotenv
 import os
-from pathlib import Path
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENV = os.environ.get("DJANGO_ENV", "dev")
+# 環境（dev / prod）
+ENV = os.environ.get("DJANGO_ENV", "prod")
 
 if ENV == "dev":
-    # 開発環境だけ .env.dev をロード
+    # 開発環境のみ secrets/.env.dev をロード
     dotenv_path = BASE_DIR / "secrets" / ".env.dev"
-    print("Loading dotenv from:", dotenv_path)
+    print("Loading dotenv from:", dotenv_path)  # デバッグ用
     load_dotenv(dotenv_path)
+else:
+    # 本番では Heroku の環境変数を利用
+    print("Running in production mode (Heroku env vars will be used)")
 
-print("Loading dotenv from:", dotenv_path)  # デバッグ出力
+# ====== 基本設定 ======
 
-load_dotenv(dotenv_path)
-
-if ENV != "prod":  # 開発環境のときだけ出力
-    print("Loading dotenv from:", dotenv_path)
-    print("DB_HOST after load:", os.environ.get("DB_HOST"))
-    print("DB_NAME =", os.environ.get("DB_NAME"))
-    print("DB_USER =", os.environ.get("DB_USER"))
-
-# BASE_DIR/.env をロード
-#load_dotenv(BASE_DIR / ".env")
-
-# デバッグ用
-print("DB_NAME =", os.environ.get("DB_NAME"))
-print("DB_USER =", os.environ.get("DB_USER"))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY is not set in environment variables")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1")
-
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
-# Application definition
+# ====== アプリケーション ======
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -98,73 +84,49 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# ====== データベース ======
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),  # Heroku が提供する環境変数
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
         ssl_require=True
     )
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# ====== 認証 ======
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailBackend',  # メールアドレスで認証
-    'django.contrib.auth.backends.ModelBackend',  # デフォルトも残す
+    'accounts.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
-# ログイン・ログアウト後のリダイレクト先
-LOGIN_REDIRECT_URL = "mypage"  # ログイン後に飛ぶ先
-LOGOUT_REDIRECT_URL = "top"    # ログアウト後に飛ぶ先
+LOGIN_REDIRECT_URL = "mypage"
+LOGOUT_REDIRECT_URL = "top"
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+# ====== 国際化 ======
 
 LANGUAGE_CODE = 'ja'
-
 TIME_ZONE = 'Asia/Tokyo'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# ====== 静的ファイル ======
 
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# ====== メール ======
 
-# 開発用メール送信（コンソールに出力）
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@nagoyameshi.com"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
