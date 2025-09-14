@@ -9,19 +9,12 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="fKWlVGwlwf3LHXTLztU8mHiCzQwHrijyZ7MsvQzc">
 
-  <title>{% block title %}NAGOYAMESHI{% endblock %}</title>
+  <title>NAGOYAMESHI</title>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Carter+One&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- 1) cdnjs への早期接続 -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <!-- 2) FAのCSSをpreloadして即stylesheet化（ダブルロード防止の定番パターン） -->
-  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"></noscript>
 
   <!-- CSS -->
   <link rel="stylesheet" href="{% static 'css/app.css' %}">

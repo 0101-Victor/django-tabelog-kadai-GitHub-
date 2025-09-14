@@ -132,27 +132,29 @@ a {
 }
 
 
+/* 星評価用 (Font Awesome依存なし) */
 .star-rating {
   position: relative;
-  z-index: 0;
   display: inline-block;
   white-space: nowrap;
-  color: #CCCCCC;
+  font-size: 1.2rem;
+  color: #ccc; /* グレー星 */
 }
 
-.star-rating:before,
-.star-rating:after {
-  content: '★★★★★';
+.star-rating::before {
+  content: "★★★★★"; /* ベース（灰色） */
+  color: #ccc;
 }
 
-.star-rating:after {
+.star-rating::after {
+  content: "★★★★★"; /* 重ねる星（黄色） */
+  color: #F29F05;
   position: absolute;
-  z-index: 1;
   top: 0;
   left: 0;
-  overflow: hidden;
   white-space: nowrap;
-  color: #F29F05;
+  overflow: hidden;
+  width: var(--after-width, 0%);
 }
 
 .star-rating[data-rate="5"]:after {
