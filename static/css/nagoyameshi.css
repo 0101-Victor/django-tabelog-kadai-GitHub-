@@ -143,10 +143,11 @@ a {
 .star-rating:before,
 .star-rating:after {
   content: "\f005\f005\f005\f005\f005"; /* Font Awesomeの星 */
-  font-family: "Font Awesome 6 Free"!important;
-  font-weight: 900;
-  display: inline-block; /* ← 念のため */
-  speak: none;           /* ← 読み上げ防止 */
+  font: var(--fa-font-solid);
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1;
 }
 
 .star-rating:before {
