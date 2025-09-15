@@ -18,7 +18,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 環境（dev / prod）
-ENV = os.environ.get("DJANGO_ENV", "prod")
+ENV = os.environ.get("DJANGO_ENV", "dev")
 
 if ENV == "dev":
     # 開発環境のみ secrets/.env.dev をロード
@@ -85,13 +85,23 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # ====== データベース ======
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+if ENV == "dev":
+    # 開発環境 → SQLite を使う
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    # 本番環境（Heroku）→ Postgres を使う
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 
 # ====== 認証 ======
 
@@ -107,7 +117,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGIN_REDIRECT_URL = "mypage"
+LOGIN_REDIRECT_URL = "subscription"
 LOGOUT_REDIRECT_URL = "top"
 
 # ====== 国際化 ======

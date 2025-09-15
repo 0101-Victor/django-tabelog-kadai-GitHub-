@@ -46,6 +46,14 @@ def payment_edit(request):
         form = PaymentForm(instance=payment)
     return render(request, "members/payment_edit.html", {"form": form})
 
+@login_required
+def subscription_view(request):
+    # すでに有料プランに登録している場合はマイページへ
+    if Subscription.objects.filter(user=request.user, is_active=True).exists():
+        return redirect("mypage")
+
+    return render(request, "members/subscription.html")
+
 # 有料プラン解約
 @login_required
 def cancel_subscription(request):
