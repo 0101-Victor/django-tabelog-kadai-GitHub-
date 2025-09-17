@@ -6,17 +6,16 @@ from .models.item import Store
 from .models.review import Review
 
 
-# Review 用のインポート / エクスポート設定
 class ReviewResource(resources.ModelResource):
     store = fields.Field(
-        column_name="store__name",
+        column_name="store_id",
         attribute="store",
-        widget=ForeignKeyWidget(Store, "name")
+        widget=ForeignKeyWidget(Store, "id")
     )
 
     class Meta:
         model = Review
-        fields = ("id", "store__name", "reviewer_name", "rating", "comment", "created_at")
+        fields = ("id", "store", "reviewer_name", "rating", "comment", "created_at")
         import_id_fields = ("id",)
 
 
