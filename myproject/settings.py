@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'base',
     "accounts",
     'members',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -117,7 +118,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGIN_REDIRECT_URL = "subscription"
+LOGIN_REDIRECT_URL = "top"
 LOGOUT_REDIRECT_URL = "top"
 
 # ====== 国際化 ======
@@ -139,3 +140,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@nagoyameshi.com"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ====== メディアファイル設定 ======
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

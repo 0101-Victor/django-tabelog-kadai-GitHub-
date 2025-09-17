@@ -23,6 +23,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from pages import views
 from accounts import views as accounts_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 def top(request):
     return render(request, "pages/index.html")
@@ -36,3 +38,7 @@ urlpatterns = [
     path("company/", views.CompanyView.as_view(), name="company"),
     path("terms/", views.TermsView.as_view(), name="terms"),
 ]
+
+# 追加：開発環境でメディアファイルを配信する設定
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

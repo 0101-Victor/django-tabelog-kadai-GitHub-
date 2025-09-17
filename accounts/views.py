@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import UserProfileCreationForm, ProfileForm
 from .models import Profile
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
 from members.models import Subscription
 
 def register(request):
@@ -12,11 +13,17 @@ def register(request):
         form = UserProfileCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)  # ← これを追加（自動ログイン）
-            return redirect("mypage")
+            messages.success(request, f"{user.username} さん、登録が完了しました！")
+            return redirect("top")
     else:
         form = UserProfileCreationForm()
     return render(request, "accounts/register.html", {"form": form})
+
+@login_required
+def add_review(request, store_id):
+    pass
 
 @login_required
 def mypage(request):
@@ -29,7 +36,7 @@ def profile_edit(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect("mypage")
+            return redirect("top")
     else:
         form = ProfileForm(instance=profile)
     return render(request, "accounts/profile_edit.html", {"form": form})
@@ -37,10 +44,14 @@ def profile_edit(request):
 class CustomLoginView(LoginView):
     template_name = "accounts/login.html"
 
+    def form_valid(self, form):
+        messages.success(self.request, f"{form.get_user().username} さん、ログインしました！")
+        return super().form_valid(form)
+
     def get_success_url(self):
-        user = self.request.user
-        # 有料プラン未加入なら subscription ページへ
-        if not Subscription.objects.filter(user=user, is_active=True).exists():
-            return "/members/subscription/"
-        # 加入済みなら mypage へ
-        return "/members/mypage/"
+        return "/"  # ログイン後はトップへ
+    
+class CustomLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "ログアウトしました。")
+        return super().dispatch(request, *args, **kwargs)
