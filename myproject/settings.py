@@ -18,7 +18,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 環境（dev / prod）
-ENV = os.environ.get("DJANGO_ENV", "dev")
+ENV = os.environ.get("DJANGO_ENV", "prod")
 
 if ENV == "dev":
     # 開発環境のみ secrets/.env.dev をロード
