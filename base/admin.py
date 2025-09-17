@@ -16,7 +16,7 @@ class ReviewResource(resources.ModelResource):
 
     class Meta:
         model = Review
-        fields = ("id", "store", "reviewer_name", "rating", "comment", "created_at")
+        fields = ("id", "store__name", "reviewer_name", "rating", "comment", "created_at")
         import_id_fields = ("id",)
 
 
