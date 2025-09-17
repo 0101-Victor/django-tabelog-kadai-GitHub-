@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Profile
+from django.core.exceptions import ValidationError
 
 
 # User + Profile 同時登録用フォーム
@@ -21,6 +22,12 @@ class UserProfileCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("email", "password1", "password2")
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("このメールアドレスはすでに登録されています。")
+        return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
