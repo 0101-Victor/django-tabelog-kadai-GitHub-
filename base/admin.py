@@ -1,22 +1,41 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 from .models.item import Store
 from .models.review import Review
 
-# Store画面からレビューを直接追加できるようにする
+
+# Review 用のインポート / エクスポート設定
+class ReviewResource(resources.ModelResource):
+    class Meta:
+        model = Review
+        fields = ("id", "store__name", "reviewer_name", "rating", "comment", "created_at")
+        import_id_fields = ("id",)
+
+
+# Store 編集画面で Review をインライン表示
 class ReviewInline(admin.TabularInline):
     model = Review
-    extra = 1  # 新規入力欄を1つ余分に表示
+    extra = 1
 
-# Store用の管理クラス
+
+# Store 管理画面
 @admin.register(Store)
 class StoreAdmin(ImportExportModelAdmin):
-    list_display = ("id", "name", "description", "budget", "postal_code", "address","opening_hours", "holiday", "seating_capacity", "category",)
-    search_fields = ("id", "name", "description", "budget", "postal_code", "address","opening_hours", "holiday", "seating_capacity", "category",)
-    inlines = [ReviewInline]
+    list_display = (
+        "id", "name", "description", "budget", "postal_code",
+        "address", "opening_hours", "holiday", "seating_capacity", "category",
+    )
+    search_fields = (
+        "id", "name", "description", "budget", "postal_code",
+        "address", "opening_hours", "holiday", "seating_capacity", "category",
+    )
+    inlines = [ReviewInline]   # ← これでインライン編集もできる
 
-# Review を独立して管理画面にも出す（インポート/エクスポート用）
+
+# Review 管理画面（インポート/エクスポート用）
 @admin.register(Review)
 class ReviewAdmin(ImportExportModelAdmin):
-    list_display = ("store", "reviewer_name", "rating", "comment", "created_at")
+    resource_class = ReviewResource
+    list_display = ("id", "store", "reviewer_name", "rating", "created_at")
     search_fields = ("store__name", "reviewer_name", "comment")
