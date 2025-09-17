@@ -10,6 +10,10 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = "プロフィール"
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related("user")
+
 
 # UserAdmin を拡張
 class CustomUserAdmin(UserAdmin):
