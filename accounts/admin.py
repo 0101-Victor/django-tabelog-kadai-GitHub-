@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from .models import Profile
 
 
@@ -12,7 +12,7 @@ class ProfileInline(admin.StackedInline):
 
 
 # UserAdmin を拡張
-class UserAdmin(BaseUserAdmin):
+class CustomUserAdmin(UserAdmin):
     inlines = (ProfileInline,)
     # 管理画面で表示するカラムを追加
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
@@ -20,7 +20,7 @@ class UserAdmin(BaseUserAdmin):
 
 # 既存の UserAdmin を上書き
 admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(User, CustomUserAdmin)
 
 # Profile 単独でも編集できるように登録（不要なら削除可）
 @admin.register(Profile)
