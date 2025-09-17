@@ -37,17 +37,6 @@ class UserProfileCreationForm(UserCreationForm):
 
         if commit:
             user.save()
-            # Profile も一緒に作成
-            Profile.objects.create(
-                user=user,
-                full_name=self.cleaned_data["full_name"],
-                full_name_kana=self.cleaned_data["full_name_kana"],
-                postal_code=self.cleaned_data["postal_code"],
-                address=self.cleaned_data["address"],
-                phone=self.cleaned_data["phone"],
-                birthday=self.cleaned_data.get("birthday"),
-                job=self.cleaned_data.get("job"),
-            )
         return user
 
 
