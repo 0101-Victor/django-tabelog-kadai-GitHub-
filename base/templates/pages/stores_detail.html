@@ -28,7 +28,7 @@
         ({{ review.rating }}★)
         <p>{{ review.comment }}</p>
 
-        {% if user.is_authenticated and is_premium and review.user == user %}
+        {% if user.is_authenticated and review.user == user %}
           {% if is_premium %}
             <!-- 有料会員なら編集/削除可能 -->
             <form method="post" class="mt-2">
@@ -47,10 +47,11 @@
             <!-- 無料会員は自分のレビューを表示するだけ -->
             <p class="text-muted">（このレビューは表示のみ。編集・削除は有料会員限定です）</p>
           {% endif %}
-        </li>
-      {% empty %}
-        <li class="list-group-item">まだレビューはありません。</li>
-      {% endfor %}
+        {% endif %}
+      </li>
+    {% empty %}
+      <li class="list-group-item">まだレビューはありません。</li>
+    {% endfor %}
   </ul>
 
   <!-- レビュー投稿フォーム -->
