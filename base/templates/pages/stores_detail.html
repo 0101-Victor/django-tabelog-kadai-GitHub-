@@ -7,7 +7,15 @@
   <h2>{{ store.name }}</h2>
   <p>{{ store.description }}</p>
   <p>住所: {{ store.address }}</p>
-  <p>カテゴリ: {{ store.category }}</p>
+  <p>カテゴリ:
+  {% if store.categories.exists %}
+    {% for cat in store.categories.all %}
+      {{ cat.name }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  {% else %}
+    未設定
+  {% endif %}
+</p>
 
   <hr>
 

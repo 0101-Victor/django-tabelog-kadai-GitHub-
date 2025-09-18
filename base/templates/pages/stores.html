@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block main %}
+  <h1>店舗一覧</h1>
+  <ul>
+    {% for store in stores %}
+      <li>
+        <a href="{% url 'store_detail' store.id %}">
+          {{ store.name }}
+          {% if store.categories.exists %}
+            (
+              {% for cat in store.categories.all %}
+                {{ cat.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            )
+          {% endif %}
+          - {{ store.budget }}円
+        </a>
+      </li>
+    {% empty %}
+      <li>店舗が見つかりません。</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
