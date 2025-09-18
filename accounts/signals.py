@@ -11,3 +11,11 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     else:
         Profile.objects.get_or_create(user=instance)
         instance.profile.save()
+
+@receiver(post_delete, sender=User)
+def delete_user_profile(sender, instance, **kwargs):
+    try:
+        if hasattr(instance, "profile"):
+            instance.profile.delete()
+    except Profile.DoesNotExist:
+        pass
