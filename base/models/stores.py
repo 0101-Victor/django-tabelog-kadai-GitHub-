@@ -1,11 +1,18 @@
-# base/views/item.py
-from django.shortcuts import render, get_object_or_404
-from base.models.item import Store
+# base/models/stores.py
+from django.db import models
+from .category import Category   # ← 追加
 
-def store_list(request):
-    stores = Store.objects.all()
-    return render(request, "pages/stores.html", {"stores": stores})
+class Store(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    budget = models.IntegerField()
+    postal_code = models.CharField(max_length=10, blank=True, null=True)
+    address = models.CharField(max_length=255)
+    opening_hours = models.CharField(max_length=100, blank=True, null=True)
+    holiday = models.CharField(max_length=100, blank=True, null=True)
+    seating_capacity = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    categories = models.ManyToManyField(Category, related_name="stores")  # ★カテゴリを複数持てるように変更
 
-def store_detail(request, store_id):
-    store = get_object_or_404(Store, id=store_id)
-    return render(request, "pages/store_detail.html", {"store": store})
+    def __str__(self):
+        return self.name

@@ -4,7 +4,7 @@ from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from .models.item import Store
 from .models.review import Review
-
+from .models.category import Category
 
 class ReviewResource(resources.ModelResource):
     store = fields.Field(
@@ -24,20 +24,12 @@ class ReviewInline(admin.TabularInline):
     model = Review
     extra = 1
 
-
-# Store 管理画面
 @admin.register(Store)
 class StoreAdmin(ImportExportModelAdmin):
-    list_display = (
-        "id", "name", "description", "budget", "postal_code",
-        "address", "opening_hours", "holiday", "seating_capacity", "category",
-    )
-    search_fields = (
-        "id", "name", "description", "budget", "postal_code",
-        "address", "opening_hours", "holiday", "seating_capacity", "category",
-    )
-    inlines = [ReviewInline]   # ← これでインライン編集もできる
-
+    list_display = ("id", "name", "budget", "postal_code", "address", "opening_hours", "holiday", "seating_capacity")
+    search_fields = ("name", "address")
+    inlines = [ReviewInline]
+    filter_horizontal = ("categories",)  # 管理画面でカテゴリを複数選択できるようにする
 
 # Review 管理画面（インポート/エクスポート用）
 @admin.register(Review)
