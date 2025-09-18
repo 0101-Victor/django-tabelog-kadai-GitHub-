@@ -27,30 +27,41 @@
         <strong>{{ review.reviewer_name }}</strong>
         ({{ review.rating }}★)
         <p>{{ review.comment }}</p>
-      </li>
-    {% empty %}
-      <li class="list-group-item">まだレビューはありません。</li>
+        {% if user.is_authenticated and review.user == user %}
+        <!-- 編集フォーム -->
+        <form method="post" class="mt-2">
+          {% csrf_token %}
+          <input type="hidden" name="review_id" value="{{ review.id }}">
+          <input type="number" name="rating" value="{{ review.rating }}" step="0.5" min="1" max="5" required>
+          <textarea name="comment">{{ review.comment }}</textarea>
+          <button type="submit" class="btn btn-sm btn-success">更新</button>
+        </form>
+
+        <!-- 削除フォーム -->
+        <form method="post" action="{% url 'delete_review' review.id %}" class="mt-1">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger">削除</button>
+        </form>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li class="list-group-item">まだレビューはありません。</li>
     {% endfor %}
   </ul>
 
-  <!-- レビュー投稿フォーム（ログイン時のみ表示） -->
-  {% if user.is_authenticated %}
-    <h4>レビューを書く</h4>
-    <form method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label class="form-label">評価（1〜5）</label>
-        <input type="number" name="rating" class="form-control" step="0.5" min="1" max="5" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">コメント</label>
-        <textarea name="comment" class="form-control" rows="4"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">投稿する</button>
-    </form>
-  {% else %}
-    <p><a href="{% url 'login' %}">ログイン</a>してレビューを投稿しましょう。</p>
-  {% endif %}
+  {% if user.is_authenticated and is_premium %}
+  <h4>レビューを書く</h4>
+  <form method="post">
+    {% csrf_token %}
+    <input type="number" name="rating" step="0.5" min="1" max="5" required>
+    <textarea name="comment"></textarea>
+    <button type="submit" class="btn btn-primary">投稿する</button>
+  </form>
+{% elif user.is_authenticated %}
+  <p class="text-danger">レビュー投稿は有料会員限定です。</p>
+{% else %}
+  <p><a href="{% url 'login' %}">ログイン</a>してレビューを投稿しましょう。</p>
+{% endif %}
 
 </div>
 {% endblock %}
