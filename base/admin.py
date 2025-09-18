@@ -37,3 +37,8 @@ class ReviewAdmin(ImportExportModelAdmin):
     resource_class = ReviewResource
     list_display = ("id", "store", "reviewer_name", "rating", "created_at")
     search_fields = ("store__name", "reviewer_name", "comment")
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name")
+    search_fields = ("name",)
