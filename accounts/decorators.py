@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib import messages
 from members.models import Subscription
+from accounts.decorators import paid_member_required
 
 def paid_member_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
