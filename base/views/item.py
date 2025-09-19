@@ -29,7 +29,7 @@ def store_detail(request, store_id):
     if request.method == "POST":
         if not is_premium:
             messages.error(request, "有料会員のみレビュー投稿ができます。")
-            return redirect("store_detail", store_id=store.id)
+            return redirect("subscription")
 
         review_id = request.POST.get("review_id")
         if review_id:  # 編集

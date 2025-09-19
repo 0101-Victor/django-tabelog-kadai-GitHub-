@@ -55,3 +55,6 @@ class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(request, "ログアウトしました。")
         return super().dispatch(request, *args, **kwargs)
+    
+def subscription(request):
+    return render(request, "accounts/subscription.html")
