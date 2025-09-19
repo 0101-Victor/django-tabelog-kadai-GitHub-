@@ -12,6 +12,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=15)
     birthday = models.DateField(null=True, blank=True)
     job = models.CharField(max_length=50, blank=True)
+    is_premium = models.BooleanField(default=False)
 
     def __str__(self):
         return self.full_name

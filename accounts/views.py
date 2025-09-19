@@ -4,8 +4,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .forms import UserProfileCreationForm, ProfileForm
 from .models import Profile
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LoginView, LogoutView
 from members.models import Subscription
 
 def register(request):
@@ -20,10 +19,6 @@ def register(request):
     else:
         form = UserProfileCreationForm()
     return render(request, "accounts/register.html", {"form": form})
-
-@login_required
-def add_review(request, store_id):
-    pass
 
 @login_required
 def mypage(request):
@@ -49,7 +44,11 @@ class CustomLoginView(LoginView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return "/"  # ログイン後はトップへ
+        # 「next」パラメータを優先
+        next_url = self.request.GET.get("next")
+        if next_url:
+            return next_url
+        return "/"
     
 class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):

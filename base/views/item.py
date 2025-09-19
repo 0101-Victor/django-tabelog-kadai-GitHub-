@@ -12,7 +12,7 @@ class IndexListView(ListView):
     template_name = 'pages/index.html' # どのテンプレとを返していくのかを記載
 
 def index(request):
-    object_list = Item.object.all()
+    object_list = Item.objects.all()
     context = {
         'object_list': object_list,
     }
@@ -28,7 +28,7 @@ def store_detail(request, store_id):
 
     if request.method == "POST":
         if not is_premium:
-            messages.error(request, "有料会員のみレビュー投稿ができます。")
+            messages.error(request, "有料会員のみレビュー投稿・編集・削除ができます。")
             return redirect("subscription")
 
         review_id = request.POST.get("review_id")
