@@ -4,15 +4,15 @@ from base.models.item import Store
 from django.contrib import messages
 from base.models.review import Review
 from django.views.generic import ListView
-from base.models import Item # トップページにアイテム一覧を表示するために設定
+from base.models import Store # トップページにアイテム一覧を表示するために設定
 from members.models import Subscription
 
 class IndexListView(ListView):
-    model = Item # djangoがアイテムモデルの一覧からデータをもってきてくれる設定
+    model = Store # djangoがアイテムモデルの一覧からデータをもってきてくれる設定
     template_name = 'pages/index.html' # どのテンプレとを返していくのかを記載
 
 def index(request):
-    object_list = Item.objects.all()
+    object_list = Store.objects.all()
     context = {
         'object_list': object_list,
     }

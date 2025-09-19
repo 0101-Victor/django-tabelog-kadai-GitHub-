@@ -26,15 +26,13 @@ from accounts import views as accounts_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-def top(request):
-    return render(request, "pages/index.html")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("members/", include("members.urls")),
     path("register/", accounts_views.register, name="register"),
-    path("", views.TopView.as_view(), name="top"),
+    path("", include("base.urls")),
     path("company/", views.CompanyView.as_view(), name="company"),
     path("terms/", views.TermsView.as_view(), name="terms"),
 ]
