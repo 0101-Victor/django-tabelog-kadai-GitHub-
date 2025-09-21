@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from members.models import Reservation, Favorite, PaymentMethod, Subscription
-from members.forms import ProfileForm, PaymentForm
+from members.forms import ProfileForm, PaymentForm,SubscriptionForm
 from accounts.models import Profile
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.conf import settings
 
 @login_required
 def mypage(request):
@@ -46,18 +49,43 @@ def payment_edit(request):
         form = PaymentForm(instance=payment)
     return render(request, "members/payment_edit.html", {"form": form})
 
+# 有料プラン登録
 @login_required
-def subscription_view(request):
-    # すでに有料プランに登録している場合はマイページへ
-    if Subscription.objects.filter(user=request.user, is_active=True).exists():
-        return redirect("mypage")
+def subscription(request):
+    if request.method == "POST":
+        form = SubscriptionForm(request.POST)
+        if form.is_valid():
+            # ダミー処理：実際の決済は行わない
+            Subscription.objects.update_or_create(
+                user=request.user,
+                defaults={"is_active": True},
+            )
 
-    return render(request, "members/subscription.html")
+            # 確認メール送信（ダミー）
+            send_mail(
+                subject="NAGOYAMESHI 有料プラン登録完了",
+                message="有料プランにご登録いただきありがとうございます！",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[request.user.email],
+                fail_silently=True,
+            )
+
+            messages.success(request, "有料プランへの登録が完了しました。")
+            return redirect("top")   # ← マイページではなくトップにリダイレクト
+    else:
+        form = SubscriptionForm()
+
+    return render(request, "accounts/subscription.html", {"form": form})
+
 
 # 有料プラン解約
 @login_required
 def cancel_subscription(request):
-    subscription, created = Subscription.objects.get_or_create(user=request.user)
-    subscription.active = False
-    subscription.save()
-    return redirect("mypage")
+    subscription = Subscription.objects.filter(user=request.user, is_active=True).first()
+    if request.method == "POST" and subscription:
+        subscription.is_active = False
+        subscription.save()
+        messages.success(request, "有料プランを解約しました。")
+        return redirect("top")
+
+    return render(request, "pages/cancel_subscription.html")

@@ -25,16 +25,17 @@ from pages import views
 from accounts import views as accounts_views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from base.views import item
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("members/", include("members.urls")),
     path("register/", accounts_views.register, name="register"),
-    path("", include("base.urls")),
+    path("", item.index, name="top"),
     path("company/", views.CompanyView.as_view(), name="company"),
     path("terms/", views.TermsView.as_view(), name="terms"),
+    path("", include("base.urls")),
 ]
 
 # 追加：開発環境でメディアファイルを配信する設定

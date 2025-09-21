@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main %}
+<div class="container nagoyameshi-container mt-4">
+  {% include "pages/store_tabs.html" with store=store active_tab='top' %}
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      {% if store.image %}
+        <img src="{{ store.image.url }}" class="img-fluid rounded" alt="{{ store.name }}">
+      {% else %}
+        <img src="{% static 'images/noimage.png' %}" class="img-fluid rounded" alt="No image">
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <h2 class="h4">{{ store.name }}</h2>
+      <p class="mb-2 text-muted">
+        {% for c in store.categories.all %}
+          <span class="badge text-bg-light me-1">{{ c.name }}</span>
+        {% empty %}カテゴリ未設定{% endfor %}
+      </p>
+      <p class="mb-2">{{ store.description|default:"説明準備中です。" }}</p>
+      <p class="mb-1">住所：{{ store.address|default:"-" }}</p>
+      <p class="mb-1">営業時間：{{ store.opening_hours|default:"-" }}</p>
+      <p class="mb-1">定休日：{{ store.holiday|default:"-" }}</p>
+      <p class="mb-1">席数：{{ store.seating_capacity|default:"-" }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

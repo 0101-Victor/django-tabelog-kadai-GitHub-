@@ -6,12 +6,9 @@ from .models import Profile
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    else:
-        if hasattr(instance, "profile"):
-            instance.profile.save()
-            
+    # 新規作成時も更新時も get_or_create で安全に処理
+    Profile.objects.get_or_create(user=instance)
+
 @receiver(post_delete, sender=User)
 def delete_user_profile(sender, instance, **kwargs):
     try:

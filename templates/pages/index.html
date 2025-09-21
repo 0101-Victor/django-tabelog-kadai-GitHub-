@@ -1,7 +1,135 @@
-{% extends 'base.html' %}
+{# templates/index.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}NAGOYAMESHI | トップ{% endblock %}
 
 {% block main %}
 
-    {% include 'snippets/headline.html' %}
+    <!-- Hero Section -->
+  <section class="hero-section text-white text-center d-flex align-items-center justify-content-center"
+           style="background-image: url('{% static 'images/hero-bg.jpg' %}');
+                  background-size: cover; background-position: center;
+                  height: 400px;">
+    <div class="container position-relative">
+      <h1 class="display-5 fw-bold">名古屋ならではの味を、見つけよう</h1>
+      <p class="lead">NAGOYAMESHIは、名古屋市のB級グルメ専門のレビューサイトです。</p>
+    </div>
+  </section>
 
+  <!-- {% include "snippets/headline.html" with hero_stores=hero_stores %} -->
+  
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# キーワード検索（まずは自身のページにGET。検索実装は後で） #}
+  <div class="bg-light mb-4 py-4 rounded">
+    <h2 class="mb-3">キーワードから探す</h2>
+    <form method="get" action="{% url 'top' %}" class="user-search-box">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="店舗名・エリア・カテゴリ" name="q" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary text-white shadow-sm">検索</button>
+      </div>
+    </form>
+  </div>
+
+  {# 評価が高いお店 #}
+  <h2 class="mb-3">評価が高いお店</h2>
+  <div class="row row-cols-xl-6 row-cols-md-3 row-cols-2 g-3 mb-5">
+    {% for store in top_rated_stores %}
+      <div class="col">
+        <a href="{% url 'store_top' store.id %}" class="link-dark card-link">
+          <div class="card h-100">
+            {% if store.image %}
+              <img src="{{ store.image.url }}" class="card-img-top vertical-card-image" alt="{{ store.name }}">
+            {% else %}
+              <img src="{% static 'images/noimage.png' %}" class="card-img-top vertical-card-image" alt="No image">
+            {% endif %}
+            <div class="card-body">
+              <h3 class="card-title h6 mb-2">{{ store.name }}</h3>
+              <div class="text-muted small mb-2">
+                {% for cat in store.categories.all %}
+                  <span class="badge text-bg-light">{{ cat.name }}</span>
+                {% empty %}
+                  <span class="text-muted">カテゴリ未設定</span>
+                {% endfor %}
+              </div>
+              <p class="card-text mb-0">
+                <span class="star-rating me-1" data-rate="{{ store.avg_rating|default:0 }}"></span>
+                {{ store.avg_rating|default:"0.0" }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p class="text-muted">表示できる店舗がありません。</p>
+    {% endfor %}
+  </div>
+
+  <div class="container nagoyameshi-container">
+  <h2 class="mb-3">カテゴリから探す</h2>
+  <div class="row row-cols-xl-6 row-cols-md-3 row-cols-2 g-3 mb-3">
+    {# categories の最初の5件だけ表示 #}
+    {% for category in categories|slice:":5" %}
+      <div class="col">
+        <a href="{% url 'stores_by_category' category.id %}" class="card-link">
+          <div class="card text-white">
+            {% if category.image %}
+              <img src="{{ category.image.url }}" class="card-img vertical-card-image" alt="{{ category.name }}">
+            {% else %}
+              <img src="{% static 'images/noimage.png' %}" class="card-img vertical-card-image" alt="No image">
+            {% endif %}
+            <div class="card-img-overlay d-flex justify-content-center align-items-center overlay-background">
+              <h3 class="card-title category-name">{{ category.name }}</h3>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p>カテゴリが登録されていません。</p>
+    {% endfor %}
+  </div>
+
+  {# ④ カテゴリから探す（タグのみ全件） #}
+  <div class="mb-5">
+    {% for c in categories %}
+      <a href="{% url 'stores_by_category' c.id %}" class="btn btn-outline-secondary btn-sm category-chip">{{ c.name }}</a>
+    {% empty %}
+      <span class="text-muted">カテゴリがありません。</span>
+    {% endfor %}
+  </div>
+
+  {# 新規掲載店 #}
+  <h2 class="mb-3">新規掲載店</h2>
+  <div class="row row-cols-xl-6 row-cols-md-3 row-cols-2 g-3 mb-5">
+    {% for store in new_stores %}
+      <div class="col">
+        <a href="{% url 'store_top' store.id %}" class="link-dark card-link">
+          <div class="card h-100">
+            {% if store.image %}
+              <img src="{{ store.image.url }}" class="card-img-top vertical-card-image" alt="{{ store.name }}">
+            {% else %}
+              <img src="{% static 'images/noimage.png' %}" class="card-img-top vertical-card-image" alt="No image">
+            {% endif %}
+            <div class="card-body">
+              <h3 class="card-title h6 mb-2">{{ store.name }}</h3>
+              <p class="card-text text-muted small mb-0">
+                {{ store.description|default:"説明文は準備中です。"|truncatechars:36 }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p class="text-muted">新規掲載はまだありません。</p>
+    {% endfor %}
+  </div>
 {% endblock %}

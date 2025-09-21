@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container nagoyameshi-container pb-5">
+  <div class="row justify-content-center">
+    <div class="col-xxl-6 col-xl-7 col-lg-8 col-md-10">
+
+      <h1 class="mb-2 text-center">{{ store.name }}</h1>
+      <p class="text-center">
+        <span class="star-rating me-1" data-rate="4"></span>
+        {{ store.reviews.all|length }}件のレビュー
+      </p>
+
+      {% include "snippets/store_tabs.html" with store=store active_tab='reserve' %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group row mb-3">
+          <label for="reservation_date" class="col-md-5 col-form-label fw-bold">予約日</label>
+          <div class="col-md-7">
+            <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
+          </div>
+        </div>
+
+        <div class="form-group row mb-3">
+          <label for="reservation_time" class="col-md-5 col-form-label fw-bold">時間</label>
+          <div class="col-md-7">
+            <select class="form-control" id="reservation_time" name="reservation_time" required>
+              <option value="" hidden>選択してください</option>
+              <option value="10:30">10:30</option>
+              <option value="11:00">11:00</option>
+              <option value="11:30">11:30</option>
+              <option value="12:00">12:00</option>
+              <option value="12:30">12:30</option>
+              <option value="13:00">13:00</option>
+              <option value="13:30">13:30</option>
+              <option value="14:00">14:00</option>
+              <option value="14:30">14:30</option>
+              <option value="15:00">15:00</option>
+              <option value="15:30">15:30</option>
+              <option value="16:00">16:00</option>
+              <option value="16:30">16:30</option>
+              <option value="17:00">17:00</option>
+              <option value="17:30">17:30</option>
+              <option value="18:00">18:00</option>
+              <option value="18:30">18:30</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row mb-4">
+          <label for="number_of_people" class="col-md-5 col-form-label fw-bold">人数</label>
+          <div class="col-md-7">
+            <select class="form-select" id="number_of_people" name="number_of_people" required>
+              <option value="" hidden>選択してください</option>
+              {% for n in 1|add:0|get_range:50 %}
+                <option value="{{ n }}">{{ n }}名</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group d-flex justify-content-center mb-4">
+          <button type="submit" class="btn btn-primary text-white shadow-sm w-50">予約する</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

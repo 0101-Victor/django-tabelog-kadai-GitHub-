@@ -55,5 +55,16 @@ class CustomLogoutView(LogoutView):
         messages.success(request, "ログアウトしました。")
         return super().dispatch(request, *args, **kwargs)
     
+@login_required
 def subscription(request):
+    if request.method == "POST":
+        # ユーザーの Subscription を取得 or 新規作成
+        subscription, created = Subscription.objects.get_or_create(user=request.user)
+        subscription.is_active = True
+        subscription.save()
+
+        messages.success(request, "有料会員登録が完了しました！")
+        return redirect("mypage")  # 登録後はマイページへ
+
+    # GET の場合は登録ページを表示
     return render(request, "accounts/subscription.html")

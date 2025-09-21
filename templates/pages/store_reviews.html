@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="container nagoyameshi-container mt-4">
+  {% include "pages/store_tabs.html" with store=store active_tab='reviews' %}
+
+  <h3 class="h5 mb-3">レビュー</h3>
+  <ul class="list-group mb-4">
+    {% for review in reviews %}
+      <li class="list-group-item">
+        <strong>{{ review.reviewer_name }}</strong>（{{ review.rating }}★）
+        <p class="mb-2">{{ review.comment }}</p>
+
+        {# --- 有料会員かつ本人のレビューのみ編集/削除可能 --- #}
+        {% if user.is_authenticated and is_premium and review.user == user %}
+          <!-- 編集フォーム -->
+          <form method="post" class="mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="review_id" value="{{ review.id }}">
+            <input type="number" name="rating" value="{{ review.rating }}" step="0.5" min="1" max="5" required>
+            <textarea name="comment" class="form-control my-2">{{ review.comment }}</textarea>
+            <button type="submit" class="btn btn-sm btn-success">更新</button>
+          </form>
+          <!-- 削除ボタン -->
+          <form method="post" action="{% url 'delete_review' review.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">削除</button>
+          </form>
+
+        {# --- 無料会員は編集・削除できない --- #}
+        {% elif user.is_authenticated and review.user == user %}
+          <p class="text-muted mb-0">（無料会員は編集・削除できません）</p>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li class="list-group-item">まだレビューはありません。</li>
+    {% endfor %}
+  </ul>
+
+  {# --- 新規投稿フォーム --- #}
+  {% if user.is_authenticated and is_premium %}
+    <h4 class="h6">レビューを書く</h4>
+    <form method="post">
+      {% csrf_token %}
+      <input type="number" name="rating" step="0.5" min="1" max="5" class="form-control mb-2" required>
+      <textarea name="comment" class="form-control mb-2" rows="3"></textarea>
+      <button type="submit" class="btn btn-primary">投稿する</button>
+    </form>
+  {% elif user.is_authenticated %}
+    <div class="alert alert-info">レビュー投稿は有料会員限定です。</div>
+  {% else %}
+    <p>
+      <a href="{% url 'login' %}?next={% url 'store_reviews' store.id %}">ログイン</a>
+      してレビューを投稿しましょう。
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

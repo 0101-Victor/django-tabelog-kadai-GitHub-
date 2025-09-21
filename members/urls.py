@@ -6,5 +6,4 @@ urlpatterns = [
     path("favorites/", views.favorite_list, name="favorite_list"),
     path("payment/", views.payment_edit, name="payment_edit"),
     path("cancel/", views.cancel_subscription, name="cancel_subscription"),
-    path("subscription/", views.subscription_view, name="subscription"),
 ]

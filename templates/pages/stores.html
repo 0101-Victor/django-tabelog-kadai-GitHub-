@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<div class="container nagoyameshi-container mt-4">
+  <h2 class="mb-3">{{ category.name }} の店舗</h2>
+
+  <div class="row row-cols-xl-4 row-cols-md-2 row-cols-1 g-3">
+    {% for store in stores %}
+      <div class="col">
+        <a href="{% url 'store_top' store.id %}" class="link-dark card-link">
+          <div class="card h-100">
+            {% if store.image %}
+              <img src="{{ store.image.url }}" class="card-img-top vertical-card-image" alt="{{ store.name }}">
+            {% else %}
+              <img src="{% static 'images/noimage.png' %}" class="card-img-top vertical-card-image" alt="No image">
+            {% endif %}
+            <div class="card-body">
+              <h3 class="card-title h6">{{ store.name }}</h3>
+              <p class="card-text text-muted small">
+                {{ store.description|default:"説明文は準備中です。"|truncatechars:36 }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% empty %}
+      <p class="text-muted">このカテゴリには店舗がありません。</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

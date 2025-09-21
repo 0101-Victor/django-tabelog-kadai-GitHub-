@@ -89,10 +89,13 @@ a {
 
 .overlay-background {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;  
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  pointer-events: none; /* クリック透過 */
 }
 
 .overlay-text {      
@@ -124,7 +127,11 @@ a {
 }
 
 .category-name {
-  text-shadow: 0.25rem 0.25rem 1rem rgb(0 0 0 / 60%);
+   color: white; /* 白字で見やすく */
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-shadow: 0.25rem 0.25rem 0.5rem rgba(0,0,0,0.6); /* 背景に馴染む影をつける */
+
 }
 
 .sort-box {
@@ -248,4 +255,15 @@ a {
 
 .card-error {
   display: none;
+}
+
+/* overlay がクリックを邪魔しないようにする */
+.overlay-background {
+  pointer-events: none;
+}
+
+/* ナビゲーションバーを前面に表示 */
+.navbar {
+  position: relative;
+  z-index: 1050;
 }
