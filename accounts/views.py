@@ -1,70 +1,84 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
-from django.contrib import messages
-from .forms import UserProfileCreationForm, ProfileForm
-from .models import Profile
-from django.contrib.auth.views import LoginView, LogoutView
-from members.models import Subscription
+from django.urls import reverse_lazy
+from django.views import generic, View
 
-def register(request):
-    if request.method == "POST":
-        form = UserProfileCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)  # ← これを追加（自動ログイン）
-            messages.success(request, f"{user.username} さん、登録が完了しました！")
-            return redirect("top")
-    else:
-        form = UserProfileCreationForm()
-    return render(request, "accounts/register.html", {"form": form})
+from . import forms
+from . import models
 
-@login_required
-def mypage(request):
-    return render(request, "accounts/mypage.html")
 
-@login_required
-def profile_edit(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect("top")
-    else:
-        form = ProfileForm(instance=profile)
-    return render(request, "accounts/profile_edit.html", {"form": form})
+# Create your views here.
+class UserDetailView(generic.DetailView):
+    model = models.CustomUser
+    template_name = 'user/user_detail.html'
 
-class CustomLoginView(LoginView):
-    template_name = "accounts/login.html"
 
-    def form_valid(self, form):
-        messages.success(self.request, f"{form.get_user().username} さん、ログインしました！")
-        return super().form_valid(form)
+class UserUpdateView(generic.UpdateView):
+    model = models.CustomUser
+    template_name = 'user/user_update.html'
+    form_class = forms.UserUpdateForm
 
     def get_success_url(self):
-        # 「next」パラメータを優先
-        next_url = self.request.GET.get("next")
-        if next_url:
-            return next_url
-        return "/"
-    
-class CustomLogoutView(LogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        messages.success(request, "ログアウトしました。")
-        return super().dispatch(request, *args, **kwargs)
-    
-@login_required
-def subscription(request):
-    if request.method == "POST":
-        # ユーザーの Subscription を取得 or 新規作成
-        subscription, created = Subscription.objects.get_or_create(user=request.user)
-        subscription.is_active = True
-        subscription.save()
+        pk = self.kwargs['pk']
+        return reverse_lazy('user_detail', kwargs={'pk': pk})
 
-        messages.success(request, "有料会員登録が完了しました！")
-        return redirect("mypage")  # 登録後はマイページへ
+    def form_valid(self, form):
+        return super().form_valid(form)
 
-    # GET の場合は登録ページを表示
-    return render(request, "accounts/subscription.html")
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class SubscribeRegisterView(View):
+    template = 'subscribe/subscribe_register.html'
+
+    def get(self, request):
+        context = {}
+        return render(self.request, self.template, context)
+
+    def post(self, request):
+        user_id = request.user.id
+        card_name = request.POST.get('card_name')
+        card_number = request.POST.get('card_number')
+
+        correct_cord_number = '4242424242424242'
+        if card_number != correct_cord_number:
+            context = {
+                'error_message': 'クレジットカード番号が正しくありません'
+            }
+            return render(self.request, self.template, context)
+
+        models.CustomUser.objects.filter(id=user_id).update(is_subscribed=True, card_name=card_name,
+                                                            card_number=card_number)
+
+        return redirect(reverse_lazy('top_page'))
+
+
+class SubscribeCancelView(generic.TemplateView):
+    template_name = 'subscribe/subscribe_cancel.html'
+
+    def post(self, request):
+        user_id = request.user.id
+
+        models.CustomUser.objects.filter(id=user_id).update(is_subscribed=False)
+        return redirect(reverse_lazy('top_page'))
+
+
+class SubscribePaymentView(View):
+    template = 'subscribe/subscribe_payment.html'
+
+    def get(self, request):
+        user_id = request.user.id
+        user = models.CustomUser.objects.get(id=user_id)
+        context = {'user': user}
+        return render(self.request, self.template, context)
+
+    def post(self, request):
+        user_id = request.user.id
+        card_name = request.POST.get('card_name')
+        card_number = request.POST.get('card_number')
+
+        print(card_name, card_number)
+
+        models.CustomUser.objects.filter(id=user_id).update(card_name=card_name, card_number=card_number)
+
+        return redirect(reverse_lazy('top_page'))

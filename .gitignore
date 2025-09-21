@@ -3,8 +3,6 @@
 secrets/.env*
 secrets/
 
-# データベース
-db.sqlite3
 
 # 仮想環境
 venv/

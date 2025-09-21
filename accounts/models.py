@@ -1,28 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.contrib.auth.models import AbstractUser
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=100)
-    full_name_kana = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=10)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    birthday = models.DateField(null=True, blank=True)
-    job = models.CharField(max_length=50, blank=True)
+
+class CustomUser(AbstractUser):
+    """拡張ユーザーモデル"""
+    user_name = models.CharField(max_length=128, null=True, blank=True, verbose_name='ユーザー名前')
+    hurigana = models.CharField(max_length=128, null=True, blank=True, verbose_name='フリガナ')
+    zip_code = models.CharField(max_length=16, null=True, blank=True, verbose_name='郵便番号')
+    address = models.CharField(max_length=255, null=True, blank=True, verbose_name='住所')
+    phone_number = models.CharField(max_length=20, null=True, blank=True, verbose_name='電話番号')
+    birthday = models.CharField(max_length=20, null=True, blank=True, verbose_name='誕生日')
+    job = models.CharField(max_length=255, null=True, blank=True, verbose_name='職業')
+    # 有料会員情報　
+    is_subscribed = models.BooleanField(default=False, verbose_name='有料会員')
+    card_name = models.CharField(max_length=128, null=True, blank=True, verbose_name='カード名義')
+    card_number = models.CharField(max_length=128, null=True, blank=True, verbose_name='カード番号')
+
+    class Meta:
+        verbose_name_plural = 'CustomUser'
 
     def __str__(self):
-        return self.full_name
-    
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-# User が保存されたら Profile も保存
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    if hasattr(instance, "profile"):
-        instance.profile.save()
+        return self.username

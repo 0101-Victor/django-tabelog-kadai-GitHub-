@@ -1,27 +1,26 @@
 .wrapper {
+  min-height: 100vh;
   position: relative;
+  padding-bottom: 240px;
   box-sizing: border-box;
 }
 
 .nagoyameshi-logo {
-  height: 24px;  
+  height: 24px;
 }
 
 .app-name {
   font-family: 'Carter One', cursive;
   font-size: 24px;
-  color: #191919;  
-}
-
-main {
-  flex: 1;
+  color: #191919;
 }
 
 footer {
   width: 100%;
+  height: 240px;
+  position: absolute;
+  bottom: 0;
   padding: 50px 15px;
-  height: auto;
-  position: static;
 }
 
 .footer-logo {
@@ -89,17 +88,14 @@ a {
 
 .overlay-background {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;  
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-  pointer-events: none; /* クリック透過 */
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 
-.overlay-text {      
-  padding: 0 70px;    
+.overlay-text {
+  padding: 0 70px;
 }
 
 .catchphrase-heading {
@@ -127,41 +123,35 @@ a {
 }
 
 .category-name {
-   color: white; /* 白字で見やすく */
-  font-size: 1.25rem;
-  font-weight: bold;
-  text-shadow: 0.25rem 0.25rem 0.5rem rgba(0,0,0,0.6); /* 背景に馴染む影をつける */
-
+  text-shadow: 0.25rem 0.25rem 1rem rgb(0 0 0 / 60%);
 }
 
 .sort-box {
   width: 150px;
 }
 
-
-/* 星評価用 (Font Awesome依存なし) */
+/* æ˜Ÿè©•ä¾¡ */
 .star-rating {
   position: relative;
+  z-index: 0;
   display: inline-block;
   white-space: nowrap;
-  font-size: 1.2rem;
-  color: #ccc; /* グレー星 */
+  color: #CCCCCC;
 }
 
-.star-rating::before {
-  content: "★★★★★"; /* ベース（灰色） */
-  color: #ccc;
+.star-rating:before,
+.star-rating:after {
+  content: '★★★★★';
 }
 
-.star-rating::after {
-  content: "★★★★★"; /* 重ねる星（黄色） */
-  color: #F29F05;
+.star-rating:after {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
-  white-space: nowrap;
   overflow: hidden;
-  width: var(--after-width, 0%);
+  white-space: nowrap;
+  color: #F29F05;
 }
 
 .star-rating[data-rate="5"]:after {
@@ -198,7 +188,6 @@ a {
   width: 0%;
 }
 
-
 .remove-favorite-button:hover {
   color: white;
 }
@@ -219,25 +208,25 @@ a {
   }
 }
 
-
+/* flatpickrã®åœŸæ›œæ—¥ã®è‰² */
 .flatpickr-weekday:nth-child(7),
 .flatpickr-days .flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):nth-child(7n) {
   color: #0421D9;
 }
 
-
+/* flatpickrã®æ—¥æ›œæ—¥ã®è‰² */
 .flatpickr-weekday:nth-child(7n + 1),
 .flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):nth-child(7n + 1) {
   color: #D90421;
 }
 
-
+/* flatpickrã®é¸æŠžã•ã‚ŒãŸæ—¥ä»˜ã®è‰² */
 .flatpickr-day.selected {
   background: #D95204 !important;
   border-color: #D95204 !important;
 }
 
-
+/* ã‚¯ãƒ¬ã‚¸ãƒƒãƒˆã‚«ãƒ¼ãƒ‰ç•ªå·å…¥åŠ›ãƒ•ã‚©ãƒ¼ãƒ  */
 .card-holder-name,
 .card-element {
   border-radius: .375rem;
@@ -255,15 +244,4 @@ a {
 
 .card-error {
   display: none;
-}
-
-/* overlay がクリックを邪魔しないようにする */
-.overlay-background {
-  pointer-events: none;
-}
-
-/* ナビゲーションバーを前面に表示 */
-.navbar {
-  position: relative;
-  z-index: 1050;
 }
